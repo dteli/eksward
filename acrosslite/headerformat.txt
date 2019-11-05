@@ -52,6 +52,13 @@ Immediately following the boards comes the strings. All strings are encoded in I
 | Notes       | http://mywebsite   |
 
 
+The clues are arranged numerically. When two clues have the same number, the Across clue comes before the Down clue.
+
+
+
+
+
+
 The known extra sections are:
 
 | Section Name     | Description                                    |

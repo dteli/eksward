@@ -1,5 +1,6 @@
 
-
+// puzzle
+// 
 // board
 //   mode (create/solve)
 //   dimensions
@@ -16,7 +17,7 @@ export const initialBoard = {
   dimensions: [0, 0],
   squares: [],
   clues: {
-    // clues are {squareNum, text}
+    // clues are {number, text}
     'across': [],
     'down': []
   },

@@ -9,6 +9,7 @@ import { initialState, initialSidebar, initialBoard, initialSquare } from './sta
 
 
 import test255 from '../testboard';
+import parseAL, {testpuzzle0} from '../utils/ALParser';
 
 
 const boardR = (state=test255, action) => {

@@ -1,11 +1,14 @@
 
-
+import parseAL, {testPuzzle0} from './utils/ALParser';
 
 const makeTestBoard = (dims) => {
 
   let board = {
     totalSquares: dims[0]*dims[1],
-    dimensions: dims,
+    dimensions: {
+      x: dims[0],
+      y: dims[1]
+    },
     clues: {
       'across': [
         {num: 1, text:"this is a text clue"},
@@ -22,13 +25,34 @@ const makeTestBoard = (dims) => {
 
   let squares = [];
 
-  for (let i=0; i<board.totalSquares; i++) {
-    squares.push({
-      squareId: i,
-      letter: 'X',
-      black: false
-    });
+  for (let i=0; i<dims[1]; i++) {
+    for (let j=0; j<dims[0]; j++) {
+      console.log(i, j);
+      squares.push({
+        position: {
+          x: j,
+          y: i
+        },
+        squareId: j + (i * dims[0]),
+        letter: 'X',
+        black: false,
+        number: undefined
+      });
+    }
   }
+
+  
+  // squares[0] = {
+  //   position: {
+  //     x: 0,
+  //     y: 0
+  //   },
+  //   squareId: 0,
+  //   letter: 'A',
+  //   black: false,
+  //   rebus: false,
+  //   number: 1
+  // }
 
   board.squares = squares;
 
@@ -37,3 +61,4 @@ const makeTestBoard = (dims) => {
 
 
 export default makeTestBoard([15,15]);
+

@@ -5,7 +5,7 @@ import Board from './Board';
 
 const mapStateToProps = state => ({
   totalSquares: state.board.totalSquares,
-  dimensions: state.board.dimensions,
+  dimensions: state.board.dimensions, // {x: width, y: height}
   squares: state.board.squares,
   clues: state.board.clues,
   timer: state.board.timer,

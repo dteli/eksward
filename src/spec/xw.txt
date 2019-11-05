@@ -1,0 +1,83 @@
+
+// sorry for this pseudo-JSON
+
+
+SQUARE {
+  position  :: {         // coords (x, y)
+    x :: integer,
+    y :: integer
+  }
+  number    :: integer
+  letter    :: string    // the actual letter (answer)
+  input     :: string    // the guessed letter
+
+  black     :: boolean
+  rebus     :: boolean
+  locked    :: boolean
+}
+
+ROW :: [SQUARE]
+
+
+
+CLUE {
+  number  :: integer,
+  text    :: string
+}
+
+CLUES {
+  across  :: [CLUE],
+  down    :: [CLUE]
+}
+
+
+BOARD {
+  squares    :: [SQUARE],
+  clues      :: CLUES,
+  solved     :: boolean
+}
+  
+  
+
+
+
+
+
+
+META {
+  title   :: string
+  author  :: string
+  date    :: string / date?
+}
+
+PUZZLE {
+
+  meta                    :: META
+  dims                    :: [integer]
+  numClues                :: integer
+
+  alStrings {
+    solutionString  :: string (TEXT),
+    blankString     :: string (TEXT)
+  }
+
+  solution      :: [[SQUARE]]  ([ROW])
+  blank         :: [[SQUARE]]  ([ROW])
+
+  clues                   :: CLUES
+
+  solved                  :: boolean
+
+}
+
+
+REDUX STORE {
+  puzzles       :: [PUZZLE]
+  loadedPuzzle  :: PUZZLE
+  board         :: BOARD
+}
+
+
+
+
+

@@ -36,6 +36,7 @@ export const squareMod = (squareId, letter, black) => ({
   squareId,
   newState: {
     letter,
-    black
+    black,
+    //number
   }
 });

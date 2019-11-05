@@ -15,9 +15,10 @@ Returns true if the cell at (x, y) gets an "across" clue number.
 ```python
 def cell_needs_across_number(x, y): 
   # Check that there is no blank to the left of us
+  # ETD: ALSO CHECK (x, y) ISN'T BLACK
   if x == 0 or is_black_cell(x-1, y):
     # Check that there is space (at least two cells) for a word here
-    if x+1 < width and is_black_cell(x+1):
+    if x+1 < width and (not is_black_cell(x+1)):
       return True
   return False
 
