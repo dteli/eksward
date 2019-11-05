@@ -16,6 +16,7 @@ export const initialBoard = {
   dimensions: [0, 0],
   squares: [],
   clues: {
+    // clues are {squareNum, text}
     'across': [],
     'down': []
   },
@@ -42,8 +43,14 @@ export const initialState = {
 
 
 
-class Square {
-  constructor(letter) {
-    this.letter = letter
+/* class Board {
+  constructor(squares) {
+    this.squares = squares;
   }
 }
+
+class Square {
+  constructor(letter) {
+    this.letter = letter;
+  }
+} */

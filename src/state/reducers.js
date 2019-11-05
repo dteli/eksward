@@ -8,10 +8,10 @@ import { BOARD_UPDATE, SQUARE_UPDATE } from './actions';
 import { initialState, initialSidebar, initialBoard, initialSquare } from './state';
 
 
+import test255 from '../testboard';
 
 
-
-const boardR = (state=initialBoard, action) => {
+const boardR = (state=test255, action) => {
   if (action.type === BOARD_UPDATE) {
     console.log('board update');
     return { ...state, ...action.newState };

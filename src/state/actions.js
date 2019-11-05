@@ -19,6 +19,15 @@ export const SQUARE_UPDATE = 'SQUARE_UPDATE';
 
 
 
+export const boardMod = (dims, clues, timer, solved) => ({
+  type: BOARD_UPDATE,
+  newState: {
+    totalSquares: dims[0]*dims[1],
+    dims,
+    timer,
+    solved
+  }
+});
 
 
 
