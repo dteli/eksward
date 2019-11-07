@@ -34,8 +34,10 @@ const parseAL = (p) => {
   let solutionRows = R.splitEvery(pWidth, solutionString);
   let blankRows = R.splitEvery(pWidth, blankString);
 
+  //console.log(solutionRows);
+
   let solutionSquareRows = rowsToSquareRows(solutionRows);
-  let blankSquareRows = rowsToSquareRows(blankRows);
+  //let blankSquareRows = rowsToSquareRows(blankRows);
 
   let remainingHexString = p.slice((0x34 + (2 * numSquares)) * 2);
   let [cluesHexString, extraHexString] = remainingHexString.split('0000', 2);
@@ -46,9 +48,11 @@ const parseAL = (p) => {
   const author = clueStrings.shift();
   const copyright = clueStrings.shift();
 
+  //console.log(solutionSquareRows);
+
   const {acrossNumbers, downNumbers} = assignNumbersToSquareRows(solutionSquareRows);
   // we don't need to grab across/downNumbers again so we just call this function
-  assignNumbersToSquareRows(blankSquareRows);
+  //assignNumbersToSquareRows(blankSquareRows);
 
   // returns {across: [{number: , text: }, ...], down: [...]}
   let clues = createClueObjects(clueStrings, acrossNumbers, downNumbers);
@@ -57,12 +61,17 @@ const parseAL = (p) => {
   return {
     solutionString,     // 'ABC.DEF..GH...'
     blankString,        // '---.---..--...'
-    solutionSquareRows, // [[{letter: 'C' (undef if black), black: t/f, number: undefined/3}]]
-    blankSquareRows,    // [[{letter: undefined, black: t/f, number: undefined/3}]]
+    squares: solutionSquareRows.flat(),  // here we flatten
+    // [{letter: 'C' (undef if black), black: t/f, number: undefined/3}]
+    //blank: blankSquareRows,    // [[{letter: undefined, black: t/f, number: undefined/3}]]
+    numSquares,
     numClues,
-    dims: [pWidth, pHeight],
+    dims: {
+      x: pWidth,
+      y: pHeight
+    },
 
-    stats: {
+    meta: {
       title,
       author,
       copyright
@@ -79,16 +88,22 @@ const parseAL = (p) => {
 
 // brs is of form ['---.--.-----.', ...]
 function rowsToSquareRows (brs) {
-  
+
+  const width = brs[0].length;
+
   const charToSquare = (c, x, y) => {
     let s = {
+      squareId: y * width + x,
       position: {x, y},
       number: undefined,  // we set numbers later
       input: undefined
     };
     if (c === '.') s.black = true;        else s.black = false;       // set black status
     if (c.match(/^[A-Z]$/)) s.letter = c; else s.letter = undefined;  // set letter
-  }
+
+    //console.log(s);
+    return s;
+  };
 
   let rows = brs.map((row, y) => row.split('').map((c, x) => charToSquare(c, x, y)));
 
@@ -105,6 +120,7 @@ function assignNumbersToSquareRows (rs) {
   // first label each square with a .acrossNumbered property
   for (let y = 0; y < rs.length; y++) {
     for (let x = 0; x < width; x++) {
+      //console.log(rs, rs[y], rs[y][x]);
       if ((rs[y][x].black === false) && 
           (x === 0 || rs[y][x-1].black === true) && 
           (x+1 < width && rs[y][x+1].black === false)) {

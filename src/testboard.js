@@ -4,8 +4,8 @@ import parseAL, {testPuzzle0} from './utils/ALParser';
 const makeTestBoard = (dims) => {
 
   let board = {
-    totalSquares: dims[0]*dims[1],
-    dimensions: {
+    numSquares: dims[0]*dims[1],
+    dims: {
       x: dims[0],
       y: dims[1]
     },
@@ -27,7 +27,6 @@ const makeTestBoard = (dims) => {
 
   for (let i=0; i<dims[1]; i++) {
     for (let j=0; j<dims[0]; j++) {
-      console.log(i, j);
       squares.push({
         position: {
           x: j,
@@ -42,17 +41,18 @@ const makeTestBoard = (dims) => {
   }
 
   
-  // squares[0] = {
-  //   position: {
-  //     x: 0,
-  //     y: 0
-  //   },
-  //   squareId: 0,
-  //   letter: 'A',
-  //   black: false,
-  //   rebus: false,
-  //   number: 1
-  // }
+  squares[0] = {
+    position: {
+      x: 0,
+      y: 0
+    },
+    squareId: 0,
+    letter: 'A',
+    input: 'A',
+    black: false,
+    rebus: false,
+    number: 1
+  }
 
   board.squares = squares;
 

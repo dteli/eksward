@@ -53,7 +53,10 @@ META {
 PUZZLE {
 
   meta                    :: META
-  dims                    :: [integer]
+  dims                    :: {      // length, width
+    x :: integer,
+    y :: integer
+  }
   numClues                :: integer
 
   alStrings {
@@ -61,8 +64,7 @@ PUZZLE {
     blankString     :: string (TEXT)
   }
 
-  solution      :: [[SQUARE]]  ([ROW])
-  blank         :: [[SQUARE]]  ([ROW])
+  squares      :: [SQUARE]
 
   clues                   :: CLUES
 

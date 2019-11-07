@@ -2,5 +2,25 @@
 .square {
   display: inline-block;
 
-  border: solid black 1px;
+  stroke: #000;
+  stroke-width: 2;
+  fill: #fff;
+}
+
+.text-input {
+  fill: #000;
+}
+
+
+.square-black {
+  fill: #000;
+}
+
+
+.square-active {
+  fill: #aaffaa;
+}
+
+.square-inword {
+  fill: #aaaaff;
 }

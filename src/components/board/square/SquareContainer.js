@@ -15,12 +15,19 @@ const mapStateToProps = (state, ownProps) => {
   //   position, letter, input, number,
   //   black, rebus, locked
   // }
-  return state.board.squares[ownProps.squareObj.squareId];
+  let s = state.board.squares[ownProps.squareObj.squareId];
+
+  //s.squareId = ownProps.squareId;
+  s.activeSquare = ownProps.activeSquare;
+  s.setActiveSquare = ownProps.setActiveSquare;
+
+
+  return s;
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  squareMod: (letter, black) => 
-    dispatch(squareMod(ownProps.squareObj.squareId, letter, black))
+  squareMod: (position, letter, input, rebus, black, locked) => 
+    dispatch(squareMod(ownProps.squareObj.squareId, position, letter, input, rebus, black, locked))
 });
 
 export default connect(
