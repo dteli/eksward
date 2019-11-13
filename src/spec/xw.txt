@@ -32,6 +32,9 @@ CLUES {
 
 
 BOARD {
+  id
+  meta
+  dims
   squares    :: [SQUARE],
   clues      :: CLUES,
   solved     :: boolean
@@ -51,6 +54,8 @@ META {
 }
 
 PUZZLE {
+
+  id                      :: integer (assigned by postgres)
 
   meta                    :: META
   dims                    :: {      // length, width
@@ -74,7 +79,7 @@ PUZZLE {
 
 
 REDUX STORE {
-  puzzles       :: [PUZZLE]
+  archive       :: [PUZZLE]
   loadedPuzzle  :: PUZZLE
   board         :: BOARD
 }

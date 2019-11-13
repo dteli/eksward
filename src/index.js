@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import ekswardState from './state/reducers.js';
 
-const store = createStore(ekswardState);
+const store = createStore(ekswardState, 
+                          window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 ReactDOM.render(
   <Provider store={store}>

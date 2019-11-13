@@ -10,6 +10,7 @@
 //   timer
 // puzzleList
 
+export const initialArchive = [];
 
 
 export const initialBoard = {

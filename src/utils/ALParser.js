@@ -57,6 +57,8 @@ const parseAL = (p) => {
   // returns {across: [{number: , text: }, ...], down: [...]}
   let clues = createClueObjects(clueStrings, acrossNumbers, downNumbers);
 
+  assignCluesToSquares(solutionSquareRows.flat(), clues, {x:pWidth, y:pHeight});
+
   
   return {
     solutionString,     // 'ABC.DEF..GH...'
@@ -80,8 +82,9 @@ const parseAL = (p) => {
     // acrossNumbers,
     // downNumbers,
 
-    clues
+    clues,
 
+    solved: solutionString === blankString
   };
 };
 
@@ -180,6 +183,31 @@ function createClueObjects (clueStrings, aNs, dNs) {
 
   return { across: acrossClues, down: downClues }
 }
+
+
+function assignCluesToSquares (squares, clues, dims) {
+  for (let square of squares) {
+    if (square.black) continue;
+    square.clues = {};
+    
+    // across
+    let sA = square;
+    while (sA.position.x !== 0 && squares[sA.squareId-1].black !== true) {
+      sA = squares[sA.squareId - 1];
+    }
+    square.clues.across = sA.number;
+    
+    // down
+    let sD = square;
+    while (sD.position.y !== 0 && squares[sD.squareId-dims.x].black !== true) {
+      sD = squares[sD.squareId - dims.x];
+    }
+    square.clues.down = sD.number;
+
+  }
+}
+
+
 
 
 

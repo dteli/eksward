@@ -4,8 +4,8 @@ import React from 'react';
 const Clue = ({ clue }) => {
 
   return (
-    <li>
-      <span className="clueNum">{clue.num}</span>
+    <li className="clue">
+      <span className="clueNum">{clue.number}</span>
       <span className="clueText">{clue.text}</span>
     </li>
   );

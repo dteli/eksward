@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import './Square.scss';
 
-const Square = ({ position, letter, input, black, number, rebus, locked,
-                  squareId, setActiveSquare, activeSquare,
+const Square = ({ position, letter, input, clues, black, number, rebus, locked,
+                  squareId, setActiveSquare, activeSquare, activeClue, setActiveClue, activeDirection,
                   squareMod }) => {
 
 
@@ -22,12 +22,19 @@ const Square = ({ position, letter, input, black, number, rebus, locked,
 
     if (activeSquare === squareId && (!black)) cs += " square-active";
 
+    if ((!black) && 
+        (activeClue.across === clues.across || activeClue.down === clues.down) && 
+        (activeSquare !== squareId))
+      cs += " square-inword";
+
     return cs;
   }
 
 
   const handleClick = (e) => {
     if (!black) setActiveSquare(squareId);
+    if (!activeDirection) setActiveClue({across: clues.across});
+    else setActiveClue({down: clues.down});
   }
 
 

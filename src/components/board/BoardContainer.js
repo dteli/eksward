@@ -1,9 +1,13 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import { boardMod, squareMod, inputMod } from '../../state/actions';
+import { boardMod, squareMod, inputMod, archiveUpdatePuzzle } from '../../state/actions';
 import Board from './Board';
 
 const mapStateToProps = state => ({
+  archive: state.archive,
+  board: state.board,
+  id: state.board.id,
   numSquares: state.board.numSquares,
   dims: state.board.dims, // {x: width, y: height}
   squares: state.board.squares,
@@ -13,14 +17,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  boardMod: ({dims, clues, timer, solved, squares}) =>
-    dispatch(boardMod({dims, clues, timer, solved, squares})),
-  squareMod: (squareId, {position, letter, input, black, rebus, locked}) =>
-    dispatch(squareMod(squareId, {position, letter, input, black, rebus, locked})),
-  inputMod: (squareId, newInput) => dispatch(inputMod(squareId, newInput))
+  boardMod: (b) => dispatch(boardMod(b)),
+  inputMod: (squareId, newInput) => dispatch(inputMod(squareId, newInput)),
+  archiveUpdatePuzzle: (b) => dispatch(archiveUpdatePuzzle(b))
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Board);
+)(Board));

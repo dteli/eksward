@@ -1,4 +1,32 @@
 
 ol {
   list-style: none;
+  height: 15rem;
+  overflow-y: scroll;
+  position: relative;
+
+  padding: 0
+
+
+}
+.clue {
+  display: flex;
+  margin: 0 0 .6rem;
+
+  span {
+
+    &.clueNum {
+      display: inline-block;
+      text-align: right;
+      width: 2rem;
+      font-weight: bold;
+      flex-grow: 0;
+      flex-basis: 2rem;
+    }
+
+    &.clueText {
+      display: inline-block;
+      margin-left: 1rem;
+    }
+  }
 }

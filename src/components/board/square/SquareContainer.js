@@ -20,6 +20,9 @@ const mapStateToProps = (state, ownProps) => {
   //s.squareId = ownProps.squareId;
   s.activeSquare = ownProps.activeSquare;
   s.setActiveSquare = ownProps.setActiveSquare;
+  s.activeClue = ownProps.activeClue;
+  s.setActiveClue = ownProps.setActiveClue;
+  s.activeDirection = ownProps.activeDirection;
 
 
   return s;
