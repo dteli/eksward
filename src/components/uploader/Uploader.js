@@ -1,6 +1,6 @@
 import React from 'react';
 import parseAL from '../../utils/ALParser';
-import APIURL from '../../helpers';
+import APIURL from '../../helpers/environment';
 
 const BASEURL = APIURL + "xw";
 
