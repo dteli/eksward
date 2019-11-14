@@ -2,7 +2,7 @@ import React from 'react';
 import parseAL from '../../utils/ALParser';
 import APIURL from '../../helpers/environment';
 
-const BASEURL = APIURL + "xw";
+const BASEURL = APIURL + "/xw";
 
 
 const Uploader = (props) => {
