@@ -32,9 +32,11 @@ const Square = ({ position, letter, input, clues, black, number, rebus, locked,
 
 
   const handleClick = (e) => {
-    if (!black) setActiveSquare(squareId);
-    if (!activeDirection) setActiveClue({across: clues.across});
-    else setActiveClue({down: clues.down});
+    if (!black) {
+      setActiveSquare(squareId);
+      if (!activeDirection) setActiveClue({across: clues.across});
+      else setActiveClue({down: clues.down});
+    }
   }
 
 

@@ -17,6 +17,8 @@ const mapStateToProps = (state, ownProps) => {
   // }
   let s = state.board.squares[ownProps.squareObj.squareId];
 
+  
+
   //s.squareId = ownProps.squareId;
   s.activeSquare = ownProps.activeSquare;
   s.setActiveSquare = ownProps.setActiveSquare;

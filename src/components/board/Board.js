@@ -24,15 +24,19 @@ const Board = (props) => {
     for (let p of props.archive) {
 
       if (p.id === parseInt(id, 10)) {
+        if (props.squares[127]) console.log("loading props before boardMod:",props.squares[127].input);
+        if (props.archive[2].squares[127]) console.log("loading archive before boardMod",props.archive[2].squares[127].input);
+        if (p.squares[127]) console.log("p.squares[127].input before boardMod",p.squares[127].input);
         console.log('loading board');
         props.boardMod(p);
-        console.log('loading:',p.squares[51].input);
+        console.log('p.squares[127].input after boardMod:',p.squares[127].input);
+        if (props.squares[127]) console.log("loading props after boardMod:",props.squares[127].input);
       }
     }
 
-    return () => {
+    return function () {
       console.log("saving board");
-      if (props.board.squares[51]) console.log("saving:",props.board.squares[127].input);
+      if (props.squares[127]) console.log("saving:",props.squares[127].input);
       props.archiveUpdatePuzzle(props.board);
       
       //console.log("unloading board");
@@ -62,24 +66,31 @@ const Board = (props) => {
     if (e.key.match(/^[A-Za-z0-9]$/)) {
       props.inputMod(activeSquare, e.key.toUpperCase());
 
-      // then go to next square
-      let k = activeDirection ? 'ArrowDown' : 'ArrowRight';
-      setActiveSquare(getNextActiveSquare(activeSquare, props.squares, props.dims, k));
-      
+      // then go to next square unless we are at end of word
+      if (!atEndOfWord(activeSquare, props.squares, props.dims, activeDirection)) {
+        let k = activeDirection ? 'ArrowDown' : 'ArrowRight';
+        setActiveSquare(getNextActiveSquare(activeSquare, props.squares, props.dims, k));
+      }
     }
+
+    let nAS = getNextActiveSquare(activeSquare, props.squares, props.dims, e.key);
+    let newAD = activeDirection;
     if (e.key.match(/^Arrow.*/)) {
       // check for directional change first
-      let newAD = activeDirection;
+      let dirChange = false;
       if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && activeDirection === false) {
         newAD = true;
+        dirChange = true;
         setActiveDirection(true);
       } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && activeDirection === true) {
         newAD = false;
+        dirChange = true;
         setActiveDirection(false);
-      } else setActiveSquare(getNextActiveSquare(activeSquare, props.squares, props.dims, e.key));
+      } else setActiveSquare(nAS);
       //console.log(newAD, getActiveClue(activeSquare, newAD, props.squares));
-      setActiveClue(getActiveClue(activeSquare, newAD, props.squares));
-      
+      const nAC = getActiveClue(dirChange ? activeSquare : nAS, newAD, props.squares);
+      setActiveClue(nAC);
+      //scrollToActiveClue(nAC);
     }
     if (e.key === 'Tab') {
       // go to next word
@@ -94,7 +105,7 @@ const Board = (props) => {
     if (e.key === 'Delete') {
       props.inputMod(activeSquare, undefined);
     }
-    console.log("keypress:",props.board.squares[127].input)
+    console.log("keypress:",props.squares[127].input)
   };
 
   //console.log(props.id);
@@ -114,7 +125,7 @@ const Board = (props) => {
                                                         setActiveDirection={setActiveDirection} />)}
         </svg>
       </div>
-      <Clues clues={props.clues} id="clues"/>
+      <Clues clues={props.clues} id="clues" activeClue={activeClue} scrollToActiveClue={scrollToActiveClue} />
     </div>
   );
 };
@@ -127,26 +138,36 @@ function getNextActiveSquare (currentSquare, squares, dims, key) {
   //let pCS = positionOfCurrentSquare(currentSquare, dims);
   let pCS = squares[currentSquare].position;
   //console.log(pCS);
-
+  let jump;
   switch (key) {
     case 'ArrowUp':
-      if (pCS.y !== 0 && squares[currentSquare-dims.x].black !== true) {
-        return currentSquare - dims.x;
+      jump = -dims.x;
+      while (squares[currentSquare+jump]) {
+        if (squares[currentSquare+jump].position.y === 0) return currentSquare + jump;
+        if (squares[currentSquare+jump].black === true) jump -= dims.x;
+        else return currentSquare + jump;
       }
       return currentSquare;
     case 'ArrowDown':
-      if (pCS.y !== dims.y-1 && squares[currentSquare+dims.x].black !== true) {
-        return currentSquare + dims.x;
+      jump = dims.x;
+      while (squares[currentSquare+jump]) {
+        if (squares[currentSquare+jump].position.y === dims.y-1) return currentSquare + jump;
+        if (squares[currentSquare+jump].black === true) jump += dims.x;
+        else return currentSquare + jump;
       }
       return currentSquare;
     case 'ArrowLeft':
-      if (pCS.x !== 0 && squares[currentSquare-1].black !== true) {
-        return currentSquare - 1;
+      jump = -1;
+      while (squares[currentSquare+jump] && squares[currentSquare+jump].position.x !== dims.x-1) {
+        if (squares[currentSquare+jump].black === true) jump--;
+        else return currentSquare + jump;
       }
       return currentSquare;
     case 'ArrowRight':
-      if (pCS.x !== dims.x-1 && squares[currentSquare+1].black !== true) {
-        return currentSquare + 1;
+      jump = 1;
+      while (squares[currentSquare+jump] && squares[currentSquare+jump].position.x !== 0) {
+        if (squares[currentSquare+jump].black === true) jump++;
+        else return currentSquare + jump;
       }
       return currentSquare;
     default:
@@ -175,6 +196,32 @@ function getActiveWord (activeSquare, dir, squares, dims) {
 }
 
 function getActiveClue (activeSquare, dir, squares) {
-  if (dir === false) return {across: squares[activeSquare].clues.across};
-  if (dir === true) return {down: squares[activeSquare].clues.down};
+  if (!dir) return {across: squares[activeSquare].clues.across};
+  if (dir) return {down: squares[activeSquare].clues.down};
 }
+
+
+
+const scrollToActiveClue = (activeClue) => {
+  let activeBox;
+  if (activeClue.across) activeBox = document.getElementById("across-clues-ol");
+  if (activeClue.down)   activeBox = document.getElementById("down-clues-ol");
+
+  let activeClueOffset = document.getElementById("active-clue").offsetTop;
+  activeBox.scrollTop = activeClueOffset;
+
+};
+
+
+const atEndOfWord = (activeSquare, squares, dims, dir) => {
+  if (!dir) {
+    if (squares[activeSquare+1]) {
+      if (squares[activeSquare].position.x === dims.x-1) return true;
+      if (squares[activeSquare+1].black) return true;
+    }
+  } else {
+    if (squares[activeSquare].position.y === dims.y-1) return true;
+    if (squares[activeSquare+dims.x].black) return true;
+  }
+  return false;
+};

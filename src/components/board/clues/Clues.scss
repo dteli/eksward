@@ -4,6 +4,7 @@ ol {
   height: 15rem;
   overflow-y: scroll;
   position: relative;
+  scroll-behavior: smooth;
 
   padding: 0
 
@@ -12,10 +13,11 @@ ol {
 .clue {
   display: flex;
   margin: 0 0 .6rem;
+  transition: 3s;
 
   span {
 
-    &.clueNum {
+    &.clue-num {
       display: inline-block;
       text-align: right;
       width: 2rem;
@@ -24,9 +26,25 @@ ol {
       flex-basis: 2rem;
     }
 
-    &.clueText {
+    &.clue-text {
       display: inline-block;
       margin-left: 1rem;
+    
     }
+
   }
+}
+
+#active-clue {
+
+  .clue-num {
+    background: #99ff99;
+    border: solid #99ff99 10px;
+  }
+
+  .clue-text {
+    background: #bbbbff;
+    border: solid #bbbbff 10px;
+  }
+
 }

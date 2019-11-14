@@ -15,11 +15,13 @@ import test255 from '../testboard';
 import parseAL, {testPuzzle0} from '../utils/ALParser';
 
 
+
+
 const archiveR = (state=[], action) => {
   switch (action.type) {
     case ARCHIVE_ADDPUZZLES_UPDATE:
       //let newArch = [...state].concat(action.puzzles);
-      let newArch = [...state];
+      let newArch = state.map(p => copyPuzzle(p));
       for (let p of action.puzzles) {
         let seen = false;
         for (let p0 of state) {
@@ -36,10 +38,9 @@ const archiveR = (state=[], action) => {
       let newArchive = [];
       for (let p of state) {
         if (p.id === action.board.id) {
-          console.log("id match");
-          newArchive.push({...action.board});
-          console.log(action.board.squares[51].input);
-        } else newArchive.push({...p});
+          newArchive.push(copyPuzzle(action.board));
+          console.log("updating state with",action.board.squares[127].input);
+        } else newArchive.push(copyPuzzle(p));
       }
       return newArchive;
     case ARCHIVE_DELETEPUZZLE_UPDATE:
@@ -71,8 +72,28 @@ const boardR = (state=dummyBoard, action) => {
       console.log("empty object passed as new board");
       return {};
     }
-    console.log(action.newState.squares[51].input)
-    return { ...state, ...action.newState };
+    console.log(action.newState.squares[127].input)
+    let newState = { ...state,
+             ...action.newState,
+             dims: {x: action.newState.dims.x, y: action.newState.dims.y},
+             squares: [],
+             clues: {across: [], down: []},
+            };
+    for (let s of action.newState.squares) {
+      newState.squares.push({...s});
+    }
+    for (let c of action.newState.clues.across) {
+      newState.clues.across.push({...c});
+    }
+    for (let c of action.newState.clues.down) {
+      newState.clues.down.push({...c});
+    }
+    return newState;
+  
+  
+  
+  
+  
   } else if (action.type === SQUARE_UPDATE) {
     console.log('square update');
     console.log(state);
@@ -86,20 +107,50 @@ const boardR = (state=dummyBoard, action) => {
     });
     return { ...state, squares: newSquares };
 
+  
+  
+  
+  
+  
   } else if (action.type === INPUT_UPDATE) {
     let newSquares = state.squares.map((s, i) => {
       if (s.squareId === action.squareId) {
         console.log("input update", action.newInput);
-        return { ...s, input: action.newInput};
+        return { ...s, 
+          position: {x: s.position.x, y: s.position.y},
+          clues: {across: s.clues.across, down: s.clues.down},
+          input: action.newInput
+        };
       }
-      return s;
+      console.log(s);
+      return copySquare(s);
     });
-    return { ...state, squares: newSquares };
+
+    let newState = {
+      ...state,
+      dims: {x: state.dims.x, y: state.dims.y},
+      clues: {across: [], down: []},
+      squares: newSquares
+    }
+
+    for (let c of state.clues.across) newState.clues.across.push({...c});
+    for (let c of state.clues.down) newState.clues.down.push({...c});
+
+    return newState;
   
   } else {
     return state;
   }
 };
+
+
+
+
+
+
+
+
+
 
 const squareR = (state=initialSquare, action) => {
   if (action.type === SQUARE_UPDATE) {
@@ -123,3 +174,31 @@ const ekswardState = combineReducers({
 });
 
 export default ekswardState;
+
+
+
+
+const copyPuzzle = (puzzle) => {
+  let newPuzzle = {
+    ...puzzle,
+    dims: {x: puzzle.dims.x, y: puzzle.dims.y},
+    squares: [],
+    clues: {across: [], down: []}
+  } 
+
+  for (let s of puzzle.squares) newPuzzle.squares.push({...s});
+
+  for (let c of puzzle.clues.across) newPuzzle.clues.across.push({...c});
+  for (let c of puzzle.clues.down)   newPuzzle.clues.down.push({...c});
+
+  return newPuzzle;
+};
+
+const copySquare = (square) => {
+  let newSquare = {
+    ...square,
+    position: {x: square.position.x, y: square.position.y},
+  };
+  if (!square.black) newSquare.clues = {across: square.clues.across, down: square.clues.down};
+  return newSquare;
+};

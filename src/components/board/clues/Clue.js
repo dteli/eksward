@@ -1,12 +1,12 @@
 import React from 'react';
 
 
-const Clue = ({ clue }) => {
+const Clue = ({ clue, id }) => {
 
   return (
-    <li className="clue">
-      <span className="clueNum">{clue.number}</span>
-      <span className="clueText">{clue.text}</span>
+    <li className="clue" id={id}>
+      <span className="clue-num">{clue.number}</span>
+      <span className="clue-text">{clue.text}</span>
     </li>
   );
 };
