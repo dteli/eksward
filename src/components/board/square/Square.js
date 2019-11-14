@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './Square.scss';
 
 const Square = ({ position, letter, input, clues, black, number, rebus, locked,
-                  squareId, setActiveSquare, activeSquare, activeClue, setActiveClue, activeDirection,
+                  squareId, setActiveSquare, activeSquare, activeClue, setActiveClue, activeDirection, setActiveDirection,
                   squareMod }) => {
 
 
@@ -36,6 +36,7 @@ const Square = ({ position, letter, input, clues, black, number, rebus, locked,
       setActiveSquare(squareId);
       if (!activeDirection) setActiveClue({across: clues.across});
       else setActiveClue({down: clues.down});
+      setActiveDirection(!activeDirection);
     }
   }
 

@@ -25,6 +25,7 @@ const mapStateToProps = (state, ownProps) => {
   s.activeClue = ownProps.activeClue;
   s.setActiveClue = ownProps.setActiveClue;
   s.activeDirection = ownProps.activeDirection;
+  s.setActiveDirection = ownProps.setActiveDirection;
 
 
   return s;

@@ -24,11 +24,12 @@ ol {
       font-weight: bold;
       flex-grow: 0;
       flex-basis: 2rem;
+      padding-right: 0.5rem;
     }
 
     &.clue-text {
       display: inline-block;
-      margin-left: 1rem;
+      padding-left: 0.5rem;
     
     }
 
@@ -40,11 +41,13 @@ ol {
   .clue-num {
     background: #99ff99;
     border: solid #99ff99 10px;
+    border-left: solid #99ff99 8px;
   }
 
   .clue-text {
     background: #bbbbff;
     border: solid #bbbbff 10px;
+    padding-left: 0;
   }
 
 }

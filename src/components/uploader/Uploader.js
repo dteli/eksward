@@ -1,7 +1,8 @@
 import React from 'react';
 import parseAL from '../../utils/ALParser';
+import APIURL from '../../helpers';
 
-const BASEURL = "http://localhost:3014/xw";
+const BASEURL = APIURL + "xw";
 
 
 const Uploader = (props) => {

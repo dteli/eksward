@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
+import APIURL from '../helpers/environment';
 
-const BASEURL = "http://localhost:3014/user"
+const BASEURL = APIURL + "/user";
 
 const Auth = (props) => {
 

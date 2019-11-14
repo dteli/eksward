@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import APIURL from '../../helpers/environment';
 import './Archive.scss';
 
-const BASEURL = 'http://localhost:3014/xw';
+const BASEURL = APIURL + '/xw';
 
 const Archive = (props) => {
 
