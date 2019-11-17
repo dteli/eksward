@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
 //import * as R from 'ramda';
 import {useParams, Redirect} from 'react-router-dom';
 import './Board.scss';
@@ -6,8 +7,14 @@ import './Board.scss';
 import SquareContainer from './square/SquareContainer';
 import Clues from './clues/Clues';
 
+import {copyPuzzle, copySquare} from '../../state/reducers';
 
 const Board = (props) => {
+
+  //console.log("initial render props",props);
+
+  const board = useSelector(state => state.board);
+  const archive = useSelector(state => state.archive);
 
   let {id} = useParams();
 
@@ -17,31 +24,41 @@ const Board = (props) => {
   const [activeSquare, setActiveSquare] = useState(0);
   //const [activeWord, setActiveWord] = useState(getActiveWord(0, activeDirection, props.squares, props.dims))
   const [activeClue, setActiveClue] = useState({across:1});
+
+  const [cBoard, setCBoard] = useState({});
   
 
   const loadBoard = () => {
-    console.log('checking boards')
+    console.log('checking boards for id',id);
     for (let p of props.archive) {
-
+      console.log(p.id);
       if (p.id === parseInt(id, 10)) {
         if (props.squares[127]) console.log("loading props before boardMod:",props.squares[127].input);
         if (props.archive[2].squares[127]) console.log("loading archive before boardMod",props.archive[2].squares[127].input);
         if (p.squares[127]) console.log("p.squares[127].input before boardMod",p.squares[127].input);
         console.log('loading board');
         props.boardMod(p);
+
+        setCBoard(copyPuzzle(p));
+
         console.log('p.squares[127].input after boardMod:',p.squares[127].input);
         if (props.squares[127]) console.log("loading props after boardMod:",props.squares[127].input);
       }
     }
 
-    return function () {
-      console.log("saving board");
+    return (function () {
+      // console.log("unload board props",props);
+      // console.log("saving board");
       if (props.squares[127]) console.log("saving:",props.squares[127].input);
-      props.archiveUpdatePuzzle(props.board);
+      // props.archiveUpdatePuzzle(props.board);
+
+      //dumbFunction();
+
+      props.archiveUpdatePuzzle(parseInt(id,10), props.board);
       
       //console.log("unloading board");
       //props.boardMod({id:99999});
-    };
+    });
   };
 
   useEffect(loadBoard, [id]);
@@ -49,10 +66,13 @@ const Board = (props) => {
   // useEffect to set interval for update to server
 
 
-  
+  function dumbFunction () {
+    console.log("unload board props",props);
+    console.log("saving board");
+    if (props.squares[127]) console.log("saving:",props.squares[127].input);
+    props.archiveUpdatePuzzle(props.board)
 
-
-
+  }  
 
 
 
@@ -105,7 +125,9 @@ const Board = (props) => {
     if (e.key === 'Delete') {
       props.inputMod(activeSquare, undefined);
     }
-    console.log("keypress:",props.squares[127].input)
+    console.log("keypress:",props.board.squares[127].input)
+    console.log("keypress board:", props.board)
+    //props.boardMod(props.board);
   };
 
   //console.log(props.id);
@@ -225,3 +247,5 @@ const atEndOfWord = (activeSquare, squares, dims, dir) => {
   }
   return false;
 };
+
+

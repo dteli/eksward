@@ -5,6 +5,8 @@ import './Archive.scss';
 
 const BASEURL = APIURL + '/xw';
 
+let hasFetched = false;
+
 const Archive = (props) => {
 
 
@@ -30,7 +32,10 @@ const Archive = (props) => {
             p.dims = {x: p.dims[0], y: p.dims[1]}
             
           }
-          props.archiveAddPuzzles(rjs);
+          if (!hasFetched) {  
+            hasFetched = true;
+            props.archiveAddPuzzles(rjs);
+          }
         })
 
     } else {

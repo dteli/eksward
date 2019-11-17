@@ -33,8 +33,9 @@ export const archiveAddPuzzle = (puzzle) => ({
   puzzle
 });
 
-export const archiveUpdatePuzzle = (board) => ({
+export const archiveUpdatePuzzle = (id, board) => ({
   type: ARCHIVE_UPDATEPUZZLE_UPDATE,
+  id,
   board
 });
 

@@ -9,7 +9,7 @@ import { createStore } from 'redux';
 import ekswardState from './state/reducers.js';
 
 const store = createStore(ekswardState, 
-                          window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+                          window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__({trace:true, traceLimit:25}));
 
 ReactDOM.render(
   <Provider store={store}>

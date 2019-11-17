@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { squareMod } from '../../../state/actions';
 import Square from './Square';
@@ -36,7 +37,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(squareMod(ownProps.squareObj.squareId, position, letter, input, rebus, black, locked))
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Square);
+)(Square));
