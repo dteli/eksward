@@ -5,7 +5,7 @@ import { boardMod, squareMod, inputMod, archiveUpdatePuzzle } from '../../state/
 import Board from './Board';
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.board, "ownProps for boardcontainer", ownProps)
+  //console.log(state.board, "ownProps for boardcontainer", ownProps)
   return { 
     archive: state.archive,
     board: state.board,
@@ -16,6 +16,8 @@ const mapStateToProps = (state, ownProps) => {
     clues: state.board.clues,
     timer: state.board.timer,
     solved: state.board.solved,
+
+    token: ownProps.token
   };
 };
 

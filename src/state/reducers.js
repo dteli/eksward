@@ -38,11 +38,11 @@ const archiveR = (state=[], action) => {
     case ARCHIVE_ADDPUZZLE_UPDATE:
       return [...state, action.puzzle];
     case ARCHIVE_UPDATEPUZZLE_UPDATE:
-      console.log("update puzzle");
+      //console.log("update puzzle");
       let newArchive = [];
       for (let p of state) {
         if (p.id === action.board.id) {
-          console.log("matched",p,"to",action.id);
+          //console.log("matched",p,"to",action.id);
           newArchive.push(copyPuzzle(action.board));
           //console.log("updating state with",action.board.squares[127].input);
         } else newArchive.push(copyPuzzle(p));
@@ -73,13 +73,13 @@ const dummyBoard = {
 const boardR = (state=dummyBoard, action) => {
   if (action.type === BOARD_UPDATE) {
 
-    console.log('board update');
+    //console.log('board update');
     //console.log(action.newState);
     // if (Object.keys(action.newState).length === 0) {
     //   console.log("empty object passed as new board");
     //   return {};
     // }
-    console.log("action.newState.squares[127].input",action.newState.squares[127].input)
+    //console.log("action.newState.squares[127].input",action.newState.squares[127].input)
     let newState = { ...state,
             ...action.newState,
 
@@ -123,7 +123,7 @@ const boardR = (state=dummyBoard, action) => {
   } else if (action.type === INPUT_UPDATE) {
     let newSquares = state.squares.map((s, i) => {
       if (s.squareId === action.squareId) {
-        console.log("input update", action.newInput);
+        //console.log("input update", action.newInput);
         return { ...s, 
           position: {x: s.position.x, y: s.position.y},
           clues: {across: s.clues.across, down: s.clues.down},
@@ -184,7 +184,6 @@ const initialUPState = {
 
 
 const userprefsR = (state=initialUPState, action) => {
-  console.log('userprefs mod');
   switch (action.type) {
     case USERPREFS_UPDATE:
       return {...action.ups};

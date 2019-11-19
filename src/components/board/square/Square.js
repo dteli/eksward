@@ -36,7 +36,7 @@ const Square = ({ position, letter, input, clues, black, number, rebus, locked,
       setActiveSquare(squareId);
       if (!activeDirection) setActiveClue({across: clues.across});
       else setActiveClue({down: clues.down});
-      console.log("activeSquare:",activeSquare," squareId:",squareId);
+      //console.log("activeSquare:",activeSquare," squareId:",squareId);
       //if (activeSquare === squareId) setActiveDirection(!activeDirection);
       setActiveDirection(!activeDirection);
     }

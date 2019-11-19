@@ -13,6 +13,7 @@ const Archive = (props) => {
   // useEffect to get puzzles from server and set them to archive
   const getArchive = () => {
     if (props.loggedIn) {
+      console.log('fetching archive');
       // fetch
       fetch(BASEURL, {
         method: 'GET',
@@ -32,10 +33,7 @@ const Archive = (props) => {
             p.dims = {x: p.dims[0], y: p.dims[1]}
             
           }
-          if (!hasFetched) {  
-            hasFetched = true;
-            props.archiveAddPuzzles(rjs);
-          }
+          props.archiveAddPuzzles(rjs);
         })
 
     } else {

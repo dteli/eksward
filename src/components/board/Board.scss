@@ -1,3 +1,10 @@
+
+.meta-stuff {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 1rem;
+}
+
 #board {
   display: flex;
 }
@@ -9,4 +16,12 @@
 #clues {
 
 
+}
+
+.solved {
+  background: #99ff99;
+}
+
+.quasi-solved {
+  background: #ff9999;
 }

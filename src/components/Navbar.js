@@ -16,7 +16,7 @@ const Navbar = (props) => {
         <ul>
           <li><Link to="/archive">archive</Link></li>
           <li><Link to="/upload">upload</Link></li>
-          <li><Link to="/puzzle">puzzle</Link></li>
+          {/* <li><Link to="/puzzle">puzzle</Link></li> */}
           <li><Link to="/userprefs">userprefs</Link></li>
           <li className="login-button" onClick={() => props.updateToken(undefined)}>{props.loggedIn ? "Log Out" : "Log In"}</li>
         </ul>

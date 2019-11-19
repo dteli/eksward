@@ -8,6 +8,9 @@ import SquareContainer from './square/SquareContainer';
 import Clues from './clues/Clues';
 
 import {copyPuzzle, copySquare} from '../../state/reducers';
+import APIURL from '../../helpers/environment';
+
+const BASEURL = APIURL + '/xw';
 
 const Board = (props) => {
 
@@ -36,41 +39,57 @@ const Board = (props) => {
   
 
   useEffect(() => {
-    console.log('checking boards for id',id);
+    //console.log('checking boards for id',id);
     for (let p of props.archive) {
-      console.log(p.id);
+      //console.log(p.id);
       if (p.id === parseInt(id, 10)) {
-        if (props.squares[127]) console.log("loading props before boardMod:",props.squares[127].input);
-        if (props.archive[2].squares[127]) console.log("loading archive before boardMod",props.archive[2].squares[127].input);
-        if (p.squares[127]) console.log("p.squares[127].input before boardMod",p.squares[127].input);
-        console.log('loading board');
+        //if (props.squares[127]) console.log("loading props before boardMod:",props.squares[127].input);
+        //if (props.archive[2].squares[127]) console.log("loading archive before boardMod",props.archive[2].squares[127].input);
+        //if (p.squares[127]) console.log("p.squares[127].input before boardMod",p.squares[127].input);
+        //console.log('loading board');
         props.boardMod(p);
 
         setCBoard(copyPuzzle(p));
 
         dBoard.current = copyPuzzle(p);
-        console.log("dBoard current",dBoard.current);
+        //console.log("dBoard current",dBoard.current);
 
-        console.log('p.squares[127].input after boardMod:',p.squares[127].input);
-        if (props.squares[127]) console.log("loading props after boardMod:",props.squares[127].input);
-        if (cBoard.squares[127]) console.log("cBoard.squares[127].input")
+        //console.log('p.squares[127].input after boardMod:',p.squares[127].input);
+        //if (props.squares[127]) console.log("loading props after boardMod:",props.squares[127].input);
+        //if (cBoard.squares[127]) console.log("cBoard.squares[127].input")
       }
     }
 
     return () => {
-      console.log("unload board props",props);
+      //console.log("unload board props",props);
       // console.log("saving board");
-      if (props.squares[127]) console.log("saving:",props.squares[127].input);
+      //if (props.squares[127]) console.log("saving:",props.squares[127].input);
       // props.archiveUpdatePuzzle(props.board);
 
       //dumbFunction();
 
-      console.log(cBoard);
+      //console.log(cBoard);
 
       props.archiveUpdatePuzzle(parseInt(id,10), dBoard.current);
       
       //console.log("unloading board");
       //props.boardMod({id:99999});
+
+      if (dBoard.current.id) {
+        fetch(BASEURL+'/'+dBoard.current.id.toString(), {
+          method: 'PUT',
+          headers: {
+            'Authorization': props.token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({xw:{
+            squares: dBoard.current.squares,
+            solved: dBoard.current.solved
+          }})
+        })
+      }//.then(r => r.json())
+        //.then((rjs) => console.log("response from PUT",rjs))
+
     };
   }, [id]);
 
@@ -79,14 +98,23 @@ const Board = (props) => {
   // useEffect to set interval for update to server
 
 
-  function dumbFunction () {
-    console.log("unload board props",props);
-    console.log("saving board");
-    if (props.squares[127]) console.log("saving:",props.squares[127].input);
-    props.archiveUpdatePuzzle(props.board)
-
-  }  
-
+  useEffect(() => {
+    if (dBoard.current.squares.every(s => s.black || s.input === s.letter)) {
+      console.log('solved!');
+      document.getElementById('board').classList.add('solved');
+      for (let s of dBoard.current.squares) s.locked = true;
+      dBoard.current.solved = true;
+    } else if (document.getElementById('board').classList.contains('solved')) {
+      document.getElementById('board').classList.remove('solved');
+      for (let s of dBoard.current.squares) s.locked = false;
+    }
+    if (dBoard.current.squares.every(s => s.black || s.input) && 
+        dBoard.current.squares.some(s => (!s.black) && s.input !== s.letter)) {
+      document.getElementById('board').classList.add('quasi-solved');
+    } else {
+      document.getElementById('board').classList.remove('quasi-solved');
+    }
+  }, [dBoard.current.squares])
 
 
 
@@ -97,10 +125,12 @@ const Board = (props) => {
     e.preventDefault();
     
     if (e.key.match(/^[A-Za-z0-9]$/)) {
-      props.inputMod(activeSquare, e.key.toUpperCase());
-      setCBoard(cbInputUpdate(cBoard, activeSquare, e.key.toUpperCase()));
-      console.log("dBoard current before letter update",dBoard.current)
-      dBoard.current = cbInputUpdate(dBoard.current, activeSquare, e.key.toUpperCase());
+      if (!activeSquare.locked) {
+        props.inputMod(activeSquare, e.key.toUpperCase());
+        setCBoard(cbInputUpdate(cBoard, activeSquare, e.key.toUpperCase()));
+        //console.log("dBoard current before letter update",dBoard.current)
+        dBoard.current = cbInputUpdate(dBoard.current, activeSquare, e.key.toUpperCase());
+      }
 
       // then go to next square unless we are at end of word
       if (!atEndOfWord(activeSquare, props.squares, props.dims, activeDirection)) {
@@ -146,16 +176,27 @@ const Board = (props) => {
       props.inputMod(activeSquare, undefined);
       dBoard.current = cbInputUpdate(dBoard.current, activeSquare, undefined);
     }
-    console.log("keypress:",props.board.squares[127].input);
-    console.log("keypress board:", props.board);
-    console.log("keypress cBoard.squares[127].input", cBoard.squares[127].input);
+    //console.log("keypress:",props.board.squares[127].input);
+    //console.log("keypress board:", props.board);
+    //console.log("keypress cBoard.squares[127].input", cBoard.squares[127].input);
     //props.boardMod(props.board);
+
+
+    
+    
+
+
   };
 
   //console.log(props.id);
 
   if (!props.id) return (<Redirect to="/archive" />);
   return (
+    <div>{ props.board.meta ?
+      <div><h2 className="meta-stuff">{props.board.meta.title}</h2>
+      <h4 className="meta-stuff">{props.board.meta.author}</h4>
+      <h4 className="meta-stuff">{props.board.meta.copyright}</h4></div>
+      : null }
     <div id="board">
       <div id="board-grid" tabIndex="-1" onKeyDown={e => handleKeypress(e)}>
         <svg width={props.dims.x * 40} height={props.dims.y * 40}>
@@ -170,6 +211,7 @@ const Board = (props) => {
         </svg>
       </div>
       <Clues clues={props.clues} id="clues" activeClue={activeClue} scrollToActiveClue={scrollToActiveClue} />
+    </div>
     </div>
   );
 };
