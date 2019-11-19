@@ -16,6 +16,7 @@ export const BOARD_UPDATE = 'BOARD_UPDATE';
 export const SQUARE_UPDATE = 'SQUARE_UPDATE';
 export const INPUT_UPDATE = 'INPUT_UPDATE';
 
+export const USERPREFS_UPDATE = 'USERPREFS_UPDATE';
 
 
 
@@ -79,4 +80,13 @@ export const inputMod = (squareId, newInput) => ({
   type: INPUT_UPDATE,
   squareId,
   newInput
+});
+
+
+
+
+
+export const userprefsMod = (ups) => ({
+  type: USERPREFS_UPDATE,
+  ups
 });

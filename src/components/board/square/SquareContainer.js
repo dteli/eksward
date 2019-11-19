@@ -16,8 +16,9 @@ const mapStateToProps = (state, ownProps) => {
   //   position, letter, input, number,
   //   black, rebus, locked
   // }
-  let s = state.board.squares[ownProps.squareObj.squareId];
-
+  let s = ownProps.s;
+  if (!s) s = state.board.squares[ownProps.squareObj.squareId];
+  
   
 
   //s.squareId = ownProps.squareId;
@@ -37,7 +38,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(squareMod(ownProps.squareObj.squareId, position, letter, input, rebus, black, locked))
 });
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Square));
+)(Square);

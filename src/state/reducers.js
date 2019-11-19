@@ -5,7 +5,8 @@ import * as R from 'ramda';
 // ./actions imports
 import { BOARD_UPDATE, SQUARE_UPDATE, INPUT_UPDATE,
          ARCHIVE_ADDPUZZLES_UPDATE, ARCHIVE_ADDPUZZLE_UPDATE, ARCHIVE_UPDATEPUZZLE_UPDATE,
-         ARCHIVE_DELETEPUZZLE_UPDATE, ARCHIVE_DELETEALL_UPDATE } from './actions';
+         ARCHIVE_DELETEPUZZLE_UPDATE, ARCHIVE_DELETEALL_UPDATE,
+         USERPREFS_UPDATE } from './actions';
 
 // ./state imports
 import { initialState, initialSidebar, initialBoard, initialSquare } from './state';
@@ -144,6 +145,9 @@ const boardR = (state=dummyBoard, action) => {
 
     return newState;
   
+  
+  
+  
   } else {
     return state;
   }
@@ -172,10 +176,34 @@ const sidebarR = (state=initialSidebar, action) => {
 
 
 
+const initialUPState = {
+  firstName: '',
+  lastName: ''
+
+};
+
+
+const userprefsR = (state=initialUPState, action) => {
+  console.log('userprefs mod');
+  switch (action.type) {
+    case USERPREFS_UPDATE:
+      return {...action.ups};
+    default:
+      return state;
+  }
+}
+
+
+
+
+
+
+
 
 const ekswardState = combineReducers({
   archive: archiveR,
-  board: boardR
+  board: boardR,
+  userprefs: userprefsR
 });
 
 export default ekswardState;

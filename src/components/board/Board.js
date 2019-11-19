@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 //import * as R from 'ramda';
 import {useParams, Redirect} from 'react-router-dom';
@@ -13,8 +13,8 @@ const Board = (props) => {
 
   //console.log("initial render props",props);
 
-  const board = useSelector(state => state.board);
-  const archive = useSelector(state => state.archive);
+  //const board = useSelector(state => state.board);
+  //const archive = useSelector(state => state.archive);
 
   let {id} = useParams();
 
@@ -25,10 +25,17 @@ const Board = (props) => {
   //const [activeWord, setActiveWord] = useState(getActiveWord(0, activeDirection, props.squares, props.dims))
   const [activeClue, setActiveClue] = useState({across:1});
 
-  const [cBoard, setCBoard] = useState({});
+  const [cBoard, setCBoard] = useState({
+    squares: [],
+    clues: {across: [], down: []}
+  });
+
+
+  let dBoard = useRef({squares: [], clues: {across: [], down: []}});
+
   
 
-  const loadBoard = () => {
+  useEffect(() => {
     console.log('checking boards for id',id);
     for (let p of props.archive) {
       console.log(p.id);
@@ -41,27 +48,33 @@ const Board = (props) => {
 
         setCBoard(copyPuzzle(p));
 
+        dBoard.current = copyPuzzle(p);
+        console.log("dBoard current",dBoard.current);
+
         console.log('p.squares[127].input after boardMod:',p.squares[127].input);
         if (props.squares[127]) console.log("loading props after boardMod:",props.squares[127].input);
+        if (cBoard.squares[127]) console.log("cBoard.squares[127].input")
       }
     }
 
-    return (function () {
-      // console.log("unload board props",props);
+    return () => {
+      console.log("unload board props",props);
       // console.log("saving board");
       if (props.squares[127]) console.log("saving:",props.squares[127].input);
       // props.archiveUpdatePuzzle(props.board);
 
       //dumbFunction();
 
-      props.archiveUpdatePuzzle(parseInt(id,10), props.board);
+      console.log(cBoard);
+
+      props.archiveUpdatePuzzle(parseInt(id,10), dBoard.current);
       
       //console.log("unloading board");
       //props.boardMod({id:99999});
-    });
-  };
+    };
+  }, [id]);
 
-  useEffect(loadBoard, [id]);
+  //useEffect(loadBoard, [id]);
 
   // useEffect to set interval for update to server
 
@@ -85,6 +98,9 @@ const Board = (props) => {
     
     if (e.key.match(/^[A-Za-z0-9]$/)) {
       props.inputMod(activeSquare, e.key.toUpperCase());
+      setCBoard(cbInputUpdate(cBoard, activeSquare, e.key.toUpperCase()));
+      console.log("dBoard current before letter update",dBoard.current)
+      dBoard.current = cbInputUpdate(dBoard.current, activeSquare, e.key.toUpperCase());
 
       // then go to next square unless we are at end of word
       if (!atEndOfWord(activeSquare, props.squares, props.dims, activeDirection)) {
@@ -119,14 +135,20 @@ const Board = (props) => {
     if (e.key === 'Backspace') {
       // erase input, then go to previous square
       props.inputMod(activeSquare, undefined);
+      setCBoard(cbInputUpdate(cBoard, activeSquare, undefined));
+      dBoard.current = cbInputUpdate(dBoard.current, activeSquare, undefined);
+
       setActiveSquare(getPreviousActiveSquare(activeSquare, props.squares, props.dims, activeDirection))
+      
 
     }
     if (e.key === 'Delete') {
       props.inputMod(activeSquare, undefined);
+      dBoard.current = cbInputUpdate(dBoard.current, activeSquare, undefined);
     }
-    console.log("keypress:",props.board.squares[127].input)
-    console.log("keypress board:", props.board)
+    console.log("keypress:",props.board.squares[127].input);
+    console.log("keypress board:", props.board);
+    console.log("keypress cBoard.squares[127].input", cBoard.squares[127].input);
     //props.boardMod(props.board);
   };
 
@@ -249,3 +271,14 @@ const atEndOfWord = (activeSquare, squares, dims, dir) => {
 };
 
 
+
+
+
+
+// functions for board as useState
+
+function cbInputUpdate (board, squareId, input) {
+  let newBoard = copyPuzzle(board);
+  newBoard.squares[squareId].input = input;
+  return newBoard;
+}

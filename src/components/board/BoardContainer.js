@@ -19,13 +19,18 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
   boardMod: (b) => dispatch(boardMod(b)),
   inputMod: (squareId, newInput) => dispatch(inputMod(squareId, newInput)),
   archiveUpdatePuzzle: (id, b) => dispatch(archiveUpdatePuzzle(id, b))
 });
 
-export default withRouter(connect(
+// export default withRouter(connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Board));
+
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Board));
+)(Board);

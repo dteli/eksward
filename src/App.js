@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import BoardContainer from './components/board/BoardContainer';
 import ArchiveContainer from './components/archive/ArchiveContainer';
 import UploaderContainer from './components/uploader/UploaderContainer';
+import UserprefsContainer from './components/userprefs/UserprefsContainer';
 import Auth from './components/Auth';
 
 function App() {
@@ -40,6 +41,9 @@ function App() {
             </Route>
             <Route path="/upload">
               <UploaderContainer token={token} loggedIn={loggedIn} />
+            </Route>
+            <Route path="/userprefs">
+              <UserprefsContainer token={token} loggedIn={loggedIn} />
             </Route>
             <Route path="/puzzle/:id">
               <BoardContainer token={token} />
