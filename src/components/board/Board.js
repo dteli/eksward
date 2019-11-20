@@ -133,9 +133,12 @@ const Board = (props) => {
       }
 
       // then go to next square unless we are at end of word
-      if (!atEndOfWord(activeSquare, props.squares, props.dims, activeDirection)) {
+      if (!atEndOfWord(activeSquare, props.squares, props.dims, activeDirection) && 
+          !isWordComplete(activeSquare, dBoard.current.squares, props.dims, activeDirection)) {
         let k = activeDirection ? 'ArrowDown' : 'ArrowRight';
-        setActiveSquare(getNextActiveSquare(activeSquare, props.squares, props.dims, k));
+        let newAS = getNextActiveSquare(activeSquare, dBoard.current.squares, props.dims, k);
+        while (dBoard.current.squares[newAS].input) newAS = getNextActiveSquare(newAS, dBoard.current.squares, props.dims, k);
+        setActiveSquare(newAS);
       }
     }
 
@@ -176,6 +179,15 @@ const Board = (props) => {
       props.inputMod(activeSquare, undefined);
       dBoard.current = cbInputUpdate(dBoard.current, activeSquare, undefined);
     }
+
+    if (e.key === 'Home') {
+      setActiveSquare(getFirstSquareInWord(activeSquare, dBoard.current.squares, activeDirection));
+    }
+    if (e.key === 'End') {
+      setActiveSquare(getLastSquareInWord(activeSquare, dBoard.current.squares, activeDirection));
+    }
+
+
     //console.log("keypress:",props.board.squares[127].input);
     //console.log("keypress board:", props.board);
     //console.log("keypress cBoard.squares[127].input", cBoard.squares[127].input);
@@ -313,6 +325,27 @@ const atEndOfWord = (activeSquare, squares, dims, dir) => {
 };
 
 
+function isWordComplete(activeSquare, squares, dims, dir) {
+  //console.log('iWC squares',squares);
+  //console.log('iWC activeSquare',activeSquare);
+  const cClue = squares[activeSquare].clues[dir ? 'down' : 'across'];
+  //console.log('iWC cClue',cClue);
+  let squaresInWord = squares.filter(s => (!s.black) && s.clues[dir ? 'down' : 'across'] === cClue);
+  //console.log('iWC squares in word',squaresInWord);
+  return squaresInWord.every(s => s.input);
+}
+
+function getFirstSquareInWord (activeSquare, squares, dir) {
+  const cClue = squares[activeSquare].clues[dir ? 'down' : 'across'];
+  return squares.filter(s => (!s.black) && s.clues[dir ? 'down' : 'across'] === cClue)[0].squareId;
+}
+
+function getLastSquareInWord (activeSquare, squares, dir) {
+  const cClue = squares[activeSquare].clues[dir ? 'down' : 'across'];
+  let squaresInWord = squares.filter(s => (!s.black) && s.clues[dir ? 'down' : 'across'] === cClue);
+  return squaresInWord[squaresInWord.length - 1].squareId;
+
+}
 
 
 
@@ -324,3 +357,5 @@ function cbInputUpdate (board, squareId, input) {
   newBoard.squares[squareId].input = input;
   return newBoard;
 }
+
+

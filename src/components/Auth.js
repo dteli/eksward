@@ -40,9 +40,9 @@ const Auth = (props) => {
       <h2>{login ? "login" : "signup"}</h2>
       <form onSubmit={e => handleSubmit(e)}>
         <label htmlFor="email">email</label>
-        <input name="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
         <label htmlFor="password">password</label>
-        <input name="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input name="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
         <button type="button" name="loginToggle" onClick={e => setLogin(!login)}>{login ? "signup" : "login"}</button>
         <button type="submit" name="submit">submit</button>
       </form>
