@@ -137,7 +137,11 @@ const Board = (props) => {
           !isWordComplete(activeSquare, dBoard.current.squares, props.dims, activeDirection)) {
         let k = activeDirection ? 'ArrowDown' : 'ArrowRight';
         let newAS = getNextActiveSquare(activeSquare, dBoard.current.squares, props.dims, k);
-        while (dBoard.current.squares[newAS].input) newAS = getNextActiveSquare(newAS, dBoard.current.squares, props.dims, k);
+        while (dBoard.current.squares[newAS].input &&
+               (!atEndOfWord(newAS, dBoard.current.squares, props.dims, activeDirection))) {
+          newAS = getNextActiveSquare(newAS, dBoard.current.squares, props.dims, k);
+          console.log(newAS);
+        }
         setActiveSquare(newAS);
       }
     }
@@ -240,16 +244,14 @@ function getNextActiveSquare (currentSquare, squares, dims, key) {
   switch (key) {
     case 'ArrowUp':
       jump = -dims.x;
-      while (squares[currentSquare+jump]) {
-        if (squares[currentSquare+jump].position.y === 0) return currentSquare + jump;
+      while (squares[currentSquare+jump]) { //&& squares[currentSquare+jump].position.y !== 0) {
         if (squares[currentSquare+jump].black === true) jump -= dims.x;
         else return currentSquare + jump;
       }
       return currentSquare;
     case 'ArrowDown':
       jump = dims.x;
-      while (squares[currentSquare+jump]) {
-        if (squares[currentSquare+jump].position.y === dims.y-1) return currentSquare + jump;
+      while (squares[currentSquare+jump]) { //&& squares[currentSquare+jump].position.y !== dims.y-1) {
         if (squares[currentSquare+jump].black === true) jump += dims.x;
         else return currentSquare + jump;
       }
